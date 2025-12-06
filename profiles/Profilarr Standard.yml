@@ -1,0 +1,45 @@
+# Profilarr Standard quality profile
+# Rules:
+# - 1080p highest priority (unchanged)
+# - 720p next (unchanged)
+# - 2160p + Remux group AFTER 720p, sorted by expected size (descending)
+# - SD / lower formats at the bottom
+
+name: Profilarr Standard
+
+qualities:
+
+  # ~6–20 GB range depending on encode; top priority
+  - name: 1080p
+    qualities:
+      - WEBDL-1080p       # ~6–10 GB
+      - WEBRip-1080p      # ~6–9 GB
+      - Bluray-1080p      # ~10–19 GB
+      - HDTV-1080p        # ~4–8 GB
+      - Remux-1080p       # ~25–45 GB (very large but still 1080p)
+
+  # ~2–6 GB range; good fallback before jumping to high-size 2160p
+  - name: 720p
+    qualities:
+      - WEBDL-720p        # ~3–5 GB
+      - WEBRip-720p       # ~2.5–4 GB
+      - Bluray-720p       # ~4–6 GB
+      - HDTV-720p         # ~2–4 GB
+
+  # Large-size fallback when no good 1080/720 options exist
+  - name: 2160p
+    qualities:
+      - BR-DISK-2160p     # ~50–80+ GB (largest)
+      - Remux-2160p       # ~40–70 GB
+      - Bluray-2160p      # ~12–25 GB (re-encode)
+      - WEBDL-2160p       # ~10–16 GB
+      - WEBRip-2160p      # ~8–14 GB
+      - HDTV-2160p        # varies (~8–12 GB)
+
+  # Lowest quality fallbacks
+  - name: SD
+    qualities:
+      - WEBDL-SD          # typically <1 GB
+      - WEBRip-SD         # typically <1 GB
+      - Bluray-SD         # ~1–2 GB
+      - HDTV-SD           # ~0.7–1.5 GB
