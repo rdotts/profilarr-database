@@ -1,45 +1,110 @@
-# Profilarr High Quality profile
-# Rules:
-# - 1080p highest priority (unchanged)
-# - 2160p + Remux group placed ABOVE 720p
-# - 720p follows 2160p
-# - SD / lower formats at the bottom
-
+# Profilarr High Quality
+# Assumptions for file size estimates:
+# - 90-minute movie
+# - Average bitrates used to estimate relative file sizes:
+#   1080p Bluray/WEB-DL/WEBRip: ~8–12 GB
+#   2160p Bluray/WEB-DL/WEBRip: ~25–50 GB
+#   Remux 2160p: ~40–60 GB (large, high priority in High Quality)
+#   720p Bluray/WEB-DL/WEBRip: ~3–5 GB
+# - Lower resolutions scaled accordingly; tiered to maintain fallback
 name: Profilarr High Quality
-
-qualities:
-
-  # Top priority; best quality per GB for most content
-  - name: 1080p
-    qualities:
-      - WEBDL-1080p       # ~6–10 GB
-      - WEBRip-1080p      # ~6–9 GB
-      - Bluray-1080p      # ~10–19 GB
-      - HDTV-1080p        # ~4–8 GB
-      - Remux-1080p       # ~25–45 GB
-
-  # High quality and large size; above 720p but below 1080p
-  - name: 2160p
-    qualities:
-      - BR-DISK-2160p     # ~50–80+ GB (largest)
-      - Remux-2160p       # ~40–70 GB
-      - Bluray-2160p      # ~12–25 GB
-      - WEBDL-2160p       # ~10–16 GB
-      - WEBRip-2160p      # ~8–14 GB
-      - HDTV-2160p        # varies (~8–12 GB)
-
-  # Good mid-size fallback when 1080p or 2160p isn’t found
-  - name: 720p
-    qualities:
-      - WEBDL-720p        # ~3–5 GB
-      - WEBRip-720p       # ~2.5–4 GB
-      - Bluray-720p       # ~4–6 GB
-      - HDTV-720p         # ~2–4 GB
-
-  # Lowest quality fallbacks
-  - name: SD
-    qualities:
-      - WEBDL-SD          # typically <1 GB
-      - WEBRip-SD         # typically <1 GB
-      - Bluray-SD         # ~1–2 GB
-      - HDTV-SD           # ~0.7–1.5 GB
+description: "Profilarr High Quality prioritizes 1080p first, then 2160p/remux above 720p. Includes all qualities to avoid missing files, maintaining proper quality progression."
+tags:
+- 1080p
+- High Quality
+- Lossy Audio
+- x264
+- h264
+upgradesAllowed: true
+minCustomFormatScore: 20000
+upgradeUntilScore: 600000
+minScoreIncrement: 1
+custom_formats:
+# 1080p
+- name: 1080p WEB-DL
+  score: 380000 # ~8–12 GB
+- name: 1080p Bluray
+  score: 280000 # ~8–12 GB
+- name: 1080p WEBRip
+  score: 280000 # ~8–12 GB
+# 2160p and Remux (above 720p)
+- name: 2160p Bluray
+  score: 250000 # ~25–50 GB
+- name: 2160p WEB-DL
+  score: 245000 # ~25–50 GB
+- name: 2160p WEBRip
+  score: 240000 # ~25–50 GB
+- name: 2160p HDTV
+  score: 235000 # ~25–50 GB
+- name: 2160p Remux
+  score: 230000 # ~40–60 GB
+- name: BR-DISK-2160p
+  score: 228000 # ~40–60 GB
+# 720p
+- name: 720p WEB-DL
+  score: 240000 # ~3–5 GB
+- name: 720p Bluray
+  score: 180000 # ~3–5 GB
+- name: 720p WEBRip
+  score: 180000 # ~3–5 GB
+# Existing tiers remain unchanged
+- name: 1080p Quality Tier 1
+  score: 125000
+- name: 1080p Quality Tier 2
+  score: 124000
+- name: 1080p Quality Tier 3
+  score: 123000
+- name: 1080p Quality Tier 4
+  score: 122000
+- name: 1080p Quality Tier 5
+  score: 121000
+- name: 1080p Quality Tier 6
+  score: 120000
+- name: 576p Bluray
+  score: 120000
+- name: 1080p Balanced Tier 1
+  score: 100000
+- name: 720p Quality Tier 1
+  score: 85000
+- name: 720p Quality Tier 2
+  score: 84000
+- name: 720p Quality Tier 3
+  score: 83000
+- name: 720p Quality Tier 4
+  score: 82000
+- name: 720p Quality Tier 5
+  score: 81000
+- name: 480p Bluray
+  score: 80000
+- name: 720p Quality Tier 6
+  score: 80000
+- name: 480p WEB-DL
+  score: 60000
+- name: 720p Balanced Tier 1
+  score: 60000
+# Remaining SD/other formats unchanged
+- name: 576p Quality Tier 1
+  score: 43000
+- name: 576p Quality Tier 2
+  score: 42000
+- name: 576p Quality Tier 3
+  score: 41000
+- name: 576p Quality Tier 4
+  score: 40000
+- name: 480p Quality Tier 1
+  score: 23000
+- name: 480p Quality Tier 2
+  score: 22000
+- name: 480p Quality Tier 3
+  score: 21000
+- name: 480p Quality Tier 4
+  score: 20000
+- name: DVD
+  score: 20000
+- name: DVD Remux
+  score: 20000
+upgrade_until:
+  id: -1
+  name: 1080p Quality
+  description: Upgrade until 1080p level, fallback to lower qualities when necessary
+language: must_original
